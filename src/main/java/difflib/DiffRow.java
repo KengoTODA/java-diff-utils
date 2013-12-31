@@ -15,6 +15,11 @@
  */
 package difflib;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Describes the diff row in form [tag, oldLine, newLine) for showing the
  * difference between two texts
@@ -22,12 +27,15 @@ package difflib;
  * @author <a href="dm.naumenko@gmail.com">Dmitry Naumenko</a>
  */
 public class DiffRow {
+    @Nonnull
     private Tag tag;
+    @Nullable
     private String oldLine;
+    @Nullable
     private String newLine;
     
-    public DiffRow(Tag tag, String oldLine, String newLine) {
-        this.tag = tag;
+    public DiffRow(@Nonnull Tag tag, @Nullable String oldLine, @Nullable String newLine) {
+        this.tag = checkNotNull(tag);
         this.oldLine = oldLine;
         this.newLine = newLine;
     }
@@ -39,6 +47,7 @@ public class DiffRow {
     /**
      * @return the tag
      */
+    @Nonnull
     public Tag getTag() {
         return tag;
     }
@@ -53,6 +62,7 @@ public class DiffRow {
     /**
      * @return the oldLine
      */
+    @Nullable
     public String getOldLine() {
         return oldLine;
     }
@@ -60,13 +70,14 @@ public class DiffRow {
     /**
      * @param oldLine the oldLine to set
      */
-    public void setOldLine(String oldLine) {
+    public void setOldLine(@Nullable String oldLine) {
         this.oldLine = oldLine;
     }
     
     /**
      * @return the newLine
      */
+    @Nullable
     public String getNewLine() {
         return newLine;
     }
@@ -74,7 +85,7 @@ public class DiffRow {
     /**
      * @param newLine the newLine to set
      */
-    public void setNewLine(String newLine) {
+    public void setNewLine(@Nullable String newLine) {
         this.newLine = newLine;
     }
     

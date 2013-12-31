@@ -20,6 +20,9 @@ import difflib.myers.Equalizer;
 
 import java.util.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * This class for generating DiffRows for side-by-sidy view.
  * You can customize the way of generating. For example, show inline diffs on not, ignoring
@@ -49,6 +52,8 @@ public class DiffRowGenerator {
     private final String InlineOldCssClass;
     private final String InlineNewCssClass;
     private final int columnWidth;
+    @Nullable
+    private final String defaultString;
     private final Equalizer<String> equalizer;
 
     /**
@@ -65,6 +70,8 @@ public class DiffRowGenerator {
         private String InlineOldCssClass = "editOldInline";
         private String InlineNewCssClass = "editNewInline";
         private int columnWidth = 80;
+        @Nullable
+        private String defaultString = "";
 
         /**
          * Show inline diffs in generating diff rows or not.
@@ -148,6 +155,12 @@ public class DiffRowGenerator {
             return this;
         }
 
+        @Nonnull
+        public Builder defaultString(@Nullable String defaultString) {
+            this.defaultString = defaultString;
+            return this;
+        }
+
         /**
          * Build the DiffRowGenerator. If some parameters is not set, the default values are used.
          * @return the customized DiffRowGenerator
@@ -166,6 +179,7 @@ public class DiffRowGenerator {
         InlineOldCssClass = builder.InlineOldCssClass;
         InlineNewCssClass = builder.InlineNewCssClass;
         columnWidth = builder.columnWidth; //
+        defaultString = builder.defaultString;
         equalizer = new Equalizer<String>() {
             public boolean equals(String original, String revised) {
                 if (ignoreWhiteSpaces) {
@@ -242,7 +256,7 @@ public class DiffRowGenerator {
             if (delta.getClass().equals(InsertDelta.class)) {
                 endPos = orig.last() + 1;
                 for (String line : (List<String>) rev.getLines()) {
-                    diffRows.add(new DiffRow(Tag.INSERT, "", line));
+                    diffRows.add(new DiffRow(Tag.INSERT, defaultString, line));
                 }
                 continue;
             }
@@ -251,7 +265,7 @@ public class DiffRowGenerator {
             if (delta.getClass().equals(DeleteDelta.class)) {
                 endPos = orig.last() + 1;
                 for (String line : (List<String>) orig.getLines()) {
-                    diffRows.add(new DiffRow(Tag.DELETE, line, ""));
+                    diffRows.add(new DiffRow(Tag.DELETE, line, defaultString));
                 }
                 continue;
             }
@@ -268,12 +282,12 @@ public class DiffRowGenerator {
             } else if (orig.size() > rev.size()) {
                 for (int j = 0; j < orig.size(); j++) {
                     diffRows.add(new DiffRow(Tag.CHANGE, (String) orig.getLines().get(j), rev
-                            .getLines().size() > j ? (String) rev.getLines().get(j) : ""));
+                            .getLines().size() > j ? (String) rev.getLines().get(j) : defaultString));
                 }
             } else {
                 for (int j = 0; j < rev.size(); j++) {
                     diffRows.add(new DiffRow(Tag.CHANGE, orig.getLines().size() > j ? (String) orig
-                            .getLines().get(j) : "", (String) rev.getLines().get(j)));
+                            .getLines().get(j) : defaultString, (String) rev.getLines().get(j)));
                 }
             }
             endPos = orig.last() + 1;
