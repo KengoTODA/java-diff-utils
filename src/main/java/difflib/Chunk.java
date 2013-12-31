@@ -15,8 +15,12 @@
  */
 package difflib;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Nonnegative;
 
 /**
  * Holds the information about the part of text involved in the diff process
@@ -33,7 +37,7 @@ import java.util.List;
  * @param T The type of the compared elements in the 'lines'.
  */
 public class Chunk<T> {
-
+    @Nonnegative
     private final int position;
     private List<T> lines;
     
@@ -45,7 +49,8 @@ public class Chunk<T> {
      * @param lines
      *            the affected lines
      */
-    public Chunk(int position, List<T> lines) {
+    public Chunk(@Nonnegative int position, List<T> lines) {
+        checkArgument(position >= 0);
         this.position = position;
         this.lines = lines;
     }
@@ -54,11 +59,12 @@ public class Chunk<T> {
      * Creates a chunk and saves a copy of affected lines
      * 
      * @param position
-     *            the start position
+     *            the start position (zero-based numbering)
      * @param lines
      *            the affected lines
      */
-    public Chunk(int position, T[] lines) {
+    public Chunk(@Nonnegative int position, T[] lines) {
+        checkArgument(position >= 0);
         this.position = position;
         this.lines = Arrays.asList(lines);
     }
@@ -83,8 +89,9 @@ public class Chunk<T> {
     }
     
     /**
-     * @return the start position of chunk in the text
+     * @return the start position of chunk in the text (zero-based numbering)
      */
+    @Nonnegative
     public int getPosition() {
         return position;
     }
@@ -100,13 +107,15 @@ public class Chunk<T> {
         return lines;
     }
 
+    @Nonnegative
     public int size() {
         return lines.size();
     }
     
     /**
-     * Returns the index of the last line of the chunk.
+     * Returns the index of the last line of the chunk. (zero-based numbering)
      */
+    @Nonnegative
     public int last() {
         return getPosition() + size() - 1;
     }
