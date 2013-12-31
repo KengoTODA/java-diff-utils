@@ -1,5 +1,8 @@
 package difflib.myers;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+
 /**
  * Specifies when two compared elements in the Myers algorithm are equal.
  * 
@@ -13,5 +16,6 @@ public interface Equalizer<T> {
 	 * @param revised The revised element. Must not be {@code null}.
 	 * @return Returns true if the elements are equal.
 	 */
-	public boolean equals(T original, T revised);
+    @CheckReturnValue
+	public boolean equals(@Nullable T original, @Nullable T revised);
 }

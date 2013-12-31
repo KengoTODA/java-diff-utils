@@ -185,12 +185,16 @@ public class DiffRowGenerator {
         columnWidth = builder.columnWidth; //
         defaultString = builder.defaultString;
         equalizer = new Equalizer<String>() {
-            public boolean equals(String original, String revised) {
+            public boolean equals(@Nullable String original, @Nullable String revised) {
                 if (ignoreWhiteSpaces) {
-                    original = original.trim().replaceAll("\\s+", " ");
-                    revised = revised.trim().replaceAll("\\s+", " ");
+                    if (original != null) {
+                        original = original.trim().replaceAll("\\s+", " ");
+                    }
+                    if (revised != null) {
+                        revised = revised.trim().replaceAll("\\s+", " ");
+                    }
                 }
-                return original.equals(revised);
+                return Objects.equals(original, revised);
             }
         };
     }
