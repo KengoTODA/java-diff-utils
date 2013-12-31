@@ -1,0 +1,13 @@
+diff -u test/a.txt test2/a.txt
+--- test/a.txt  2013-12-31 19:37:09.000000000 +0800
++++ test2/a.txt 2013-12-31 19:37:02.000000000 +0800
+@@ -1 +1 @@
+-hello, world
++hello
+diff -u test/b.txt test2/b.txt
+--- test/b.txt  2013-12-31 19:37:20.000000000 +0800
++++ test2/b.txt 2013-12-31 19:37:02.000000000 +0800
+@@ -1,2 +1 @@
+-hello! 1
+-hello! 2
++hello
