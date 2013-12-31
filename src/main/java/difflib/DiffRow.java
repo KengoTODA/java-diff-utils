@@ -40,7 +40,7 @@ public class DiffRow {
         this.newLine = newLine;
     }
     
-    public enum Tag {
+    public static enum Tag {
         INSERT, DELETE, CHANGE, EQUAL
     }
     

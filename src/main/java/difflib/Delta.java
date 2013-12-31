@@ -35,7 +35,7 @@ public abstract class Delta<T> {
      * Specifies the type of the delta.
      *
      */
-    public enum TYPE {
+    public static enum TYPE {
     	/** A change in the original. */
         CHANGE, 
         /** A delete from the original. */
