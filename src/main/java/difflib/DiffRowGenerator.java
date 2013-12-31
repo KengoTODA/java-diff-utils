@@ -50,7 +50,6 @@ public class DiffRowGenerator {
 
     private final boolean showInlineDiffs;
     private final boolean ignoreWhiteSpaces;
-    private final boolean ignoreBlankLines;
     private final String InlineOldTag;
     private final String InlineNewTag;
     private final String InlineOldCssClass;
@@ -68,7 +67,6 @@ public class DiffRowGenerator {
     public static class Builder {
         private boolean showInlineDiffs = false;
         private boolean ignoreWhiteSpaces = false;
-        private boolean ignoreBlankLines = false;
         private String InlineOldTag = "span";
         private String InlineNewTag = "span";
         private String InlineOldCssClass = "editOldInline";
@@ -94,16 +92,6 @@ public class DiffRowGenerator {
          */
         public Builder ignoreWhiteSpaces(boolean val) {
             ignoreWhiteSpaces = val;
-            return this;
-        }
-
-        /**
-         * Ignore blank lines in generating diff rows or not.
-         * @param val the value to set. Default: true.
-         * @return builder with configured ignoreBlankLines parameter
-         */
-        public Builder ignoreBlankLines(boolean val) {
-            ignoreBlankLines = val;
             return this;
         }
 
@@ -177,7 +165,6 @@ public class DiffRowGenerator {
     private DiffRowGenerator(Builder builder) {
         showInlineDiffs = builder.showInlineDiffs;
         ignoreWhiteSpaces = builder.ignoreWhiteSpaces; //
-        ignoreBlankLines = builder.ignoreBlankLines; //
         InlineOldTag = builder.InlineOldTag;
         InlineNewTag = builder.InlineNewTag;
         InlineOldCssClass = builder.InlineOldCssClass;
@@ -209,17 +196,6 @@ public class DiffRowGenerator {
      */
     public List<DiffRow> generateDiffRows(List<String> original, List<String> revised) {
         return generateDiffRows(original, revised, DiffUtils.diff(original, revised, equalizer));
-    }
-
-    private List<String> removeBlankLines(List<String> lines) {
-        List<String> result = new ArrayList<String>();
-        for (String line: lines) {
-            if (line.trim().length() == 0) {
-                result.add("");
-            }
-            result.add(line);
-        }
-        return result;
     }
 
     /**
