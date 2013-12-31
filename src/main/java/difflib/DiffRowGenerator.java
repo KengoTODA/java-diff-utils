@@ -23,6 +23,8 @@ import java.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Joiner;
+
 /**
  * This class for generating DiffRows for side-by-sidy view.
  * You can customize the way of generating. For example, show inline diffs on not, ignoring
@@ -44,6 +46,8 @@ import javax.annotation.Nullable;
  * @author <a href="dm.naumenko@gmail.com">Dmitry Naumenko</a>
   */
 public class DiffRowGenerator {
+    private static final Joiner LF_JOINER = Joiner.on("\n");
+
     private final boolean showInlineDiffs;
     private final boolean ignoreWhiteSpaces;
     private final boolean ignoreBlankLines;
@@ -308,11 +312,11 @@ public class DiffRowGenerator {
         List<String> orig = (List<String>) delta.getOriginal().getLines();
         List<String> rev = (List<String>) delta.getRevised().getLines();
         LinkedList<String> origList = new LinkedList<String>();
-        for (Character character : join(orig, "\n").toCharArray()) {
+        for (Character character : LF_JOINER.join(orig).toCharArray()) {
             origList.add(character.toString());
         }
         LinkedList<String> revList = new LinkedList<String>();
-        for (Character character : join(rev, "\n").toCharArray()) {
+        for (Character character : LF_JOINER.join(rev).toCharArray()) {
             revList.add(character.toString());
         }
         List<Delta<String>> inlineDeltas = DiffUtils.diff(origList, revList).getDeltas();
@@ -408,24 +412,5 @@ public class DiffRowGenerator {
         String endTag = tagBuilder.toString();
 
         return startTag + line + endTag;
-    }
-
-    /**
-     * The helper method for joining collections
-     * @param <T>
-     * @param objs the collection to join
-     * @param delimiter the delimiter to use
-     * @return the joined string
-     */
-    private static <T> String join(final Iterable<T> objs, final String delimiter) {
-        Iterator<T> iter = objs.iterator();
-        if (!iter.hasNext()) {
-            return "";
-        }
-        StringBuffer buffer = new StringBuffer(String.valueOf(iter.next()));
-        while (iter.hasNext()) {
-            buffer.append(delimiter).append(String.valueOf(iter.next()));
-        }
-        return buffer.toString();
     }
 }
