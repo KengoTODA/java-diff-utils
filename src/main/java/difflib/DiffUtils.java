@@ -18,10 +18,18 @@ package difflib;
 import difflib.myers.Equalizer;
 import difflib.myers.MyersDiff;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 /**
  * Implements the difference and patching engine
@@ -36,6 +44,21 @@ public class DiffUtils {
 	private static Pattern unifiedDiffChunkRe = Pattern
 			.compile("^@@\\s+-(?:(\\d+)(?:,(\\d+))?)\\s+\\+(?:(\\d+)(?:,(\\d+))?)\\s+@@$");
 
+	@Nonnull
+    public Patch<String> diff(@Nonnull File original, @Nonnull File revised) throws IOException {
+        return diff(Files.readLines(original, Charsets.UTF_8), Files.readLines(revised, Charsets.UTF_8));
+    }
+
+    @Nonnull
+    public Patch<String> diff(@Nonnull File original, @Nonnull File revised, @Nonnull DiffAlgorithm<String> algorithm) throws IOException {
+        return diff(Files.readLines(original, Charsets.UTF_8), Files.readLines(revised, Charsets.UTF_8), algorithm);
+    }
+
+    @Nonnull
+	public Patch<String> diff(@Nonnull File original, @Nonnull File revised, @Nullable Equalizer<String> equalizer) throws IOException {
+	    return diff(Files.readLines(original, Charsets.UTF_8), Files.readLines(revised, Charsets.UTF_8), equalizer);
+	}
+
 	/**
 	 * Computes the difference between the original and revised list of elements
 	 * with default diff algorithm
@@ -47,6 +70,7 @@ public class DiffUtils {
 	 * @return The patch describing the difference between the original and
 	 *         revised sequences. Never {@code null}.
 	 */
+    @Nonnull
 	public static <T> Patch<T> diff(List<T> original, List<T> revised) {
 		return DiffUtils.diff(original, revised, new MyersDiff<T>());
 	}
@@ -67,6 +91,7 @@ public class DiffUtils {
 	 * @return The patch describing the difference between the original and
 	 *         revised sequences. Never {@code null}.
 	 */
+    @Nonnull
 	public static <T> Patch<T> diff(List<T> original, List<T> revised,
 			Equalizer<T> equalizer) {
 		if (equalizer != null) {
@@ -89,6 +114,7 @@ public class DiffUtils {
 	 * @return The patch describing the difference between the original and
 	 *         revised sequences. Never {@code null}.
 	 */
+    @Nonnull
 	public static <T> Patch<T> diff(List<T> original, List<T> revised,
 			DiffAlgorithm<T> algorithm) {
 		if (original == null) {
@@ -114,6 +140,7 @@ public class DiffUtils {
 	 * @throws PatchFailedException
 	 *             if can't apply patch
 	 */
+    @Nonnull
 	public static <T> List<T> patch(List<T> original, Patch<T> patch)
 			throws PatchFailedException {
 		return patch.applyTo(original);
