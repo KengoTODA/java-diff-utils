@@ -3,7 +3,7 @@
 	<groupId>jp.skypencil.java-diff-utils</groupId>
 	<artifactId>diffutils</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.1</version>
 
 	<name>java-diff-utils</name>
 	<description>The DiffUtils library for computing diffs, applying patches, generationg side-by-side view in Java.</description>
