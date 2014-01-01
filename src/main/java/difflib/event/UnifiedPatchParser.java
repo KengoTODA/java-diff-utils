@@ -17,7 +17,7 @@ import difflib.Patch;
 
 public class UnifiedPatchParser {
 
-    void parse(File unifiedPatch, @Nonnull PatchHandler<String> handler) throws FileNotFoundException, IOException {
+    public void parse(File unifiedPatch, @Nonnull PatchHandler<String> handler) throws FileNotFoundException, IOException {
         try (BufferedReader reader = Files.newReader(unifiedPatch, Charsets.UTF_8)) {
             String line = reader.readLine();
             do {
