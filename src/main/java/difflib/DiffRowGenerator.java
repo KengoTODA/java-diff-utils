@@ -74,6 +74,15 @@ public class DiffRowGenerator {
         private int columnWidth = 80;
         @Nullable
         private String defaultString = "";
+        private Equalizer<String> stringEqualizer = new Equalizer<String>() {
+            public boolean equals(String original, String revised) {
+                if (ignoreWhiteSpaces) {
+                    original = original.trim().replaceAll("\\s+", " ");
+                    revised = revised.trim().replaceAll("\\s+", " ");
+                }
+                return original.equals(revised);
+            }
+        };;
 
         /**
          * Show inline diffs in generating diff rows or not.
@@ -154,7 +163,18 @@ public class DiffRowGenerator {
         }
 
         /**
-         * Build the DiffRowGenerator. If some parameters is not set, the default values are used.
+         * Set the custom equalizer to use while comparing the lines of the revisions.
+         * @param stringEqualizer to use (custom one)
+         * @return builder with configured stringEqualizer
+         */
+        public Builder stringEqualizer(Equalizer<String> stringEqualizer) {
+            this.stringEqualizer = stringEqualizer;
+            return this;
+        }
+
+        /**
+         * Build the DiffRowGenerator using the default Equalizer for rows.
+         * If some parameters are not set, the default values are used.
          * @return the customized DiffRowGenerator
          */
         public DiffRowGenerator build() {
@@ -171,19 +191,7 @@ public class DiffRowGenerator {
         InlineNewCssClass = builder.InlineNewCssClass;
         columnWidth = builder.columnWidth; //
         defaultString = builder.defaultString;
-        equalizer = new Equalizer<String>() {
-            public boolean equals(@Nullable String original, @Nullable String revised) {
-                if (ignoreWhiteSpaces) {
-                    if (original != null) {
-                        original = original.trim().replaceAll("\\s+", " ");
-                    }
-                    if (revised != null) {
-                        revised = revised.trim().replaceAll("\\s+", " ");
-                    }
-                }
-                return Objects.equals(original, revised);
-            }
-        };
+        equalizer = builder.stringEqualizer;
     }
 
     /**
