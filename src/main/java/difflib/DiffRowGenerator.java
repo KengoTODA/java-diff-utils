@@ -77,6 +77,8 @@ public class DiffRowGenerator {
         private Equalizer<String> stringEqualizer = new Equalizer<String>() {
             public boolean equals(String original, String revised) {
                 if (ignoreWhiteSpaces) {
+                    original = original == null ? "" : original;
+                    revised = revised == null ? "" : revised;
                     original = original.trim().replaceAll("\\s+", " ");
                     revised = revised.trim().replaceAll("\\s+", " ");
                 }
