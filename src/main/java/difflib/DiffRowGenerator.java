@@ -23,7 +23,9 @@ import java.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 /**
  * This class for generating DiffRows for side-by-sidy view.
@@ -76,15 +78,9 @@ public class DiffRowGenerator {
         private String defaultString = "";
         private Equalizer<String> stringEqualizer = new Equalizer<String>() {
             public boolean equals(String original, String revised) {
-                if (ignoreWhiteSpaces) {
-                    original = original == null ? "" : original;
-                    revised = revised == null ? "" : revised;
-                    original = original.trim().replaceAll("\\s+", " ");
-                    revised = revised.trim().replaceAll("\\s+", " ");
-                }
-                return original.equals(revised);
+                return Objects.equals(original, revised);
             }
-        };;
+        };
 
         /**
          * Show inline diffs in generating diff rows or not.
@@ -205,6 +201,20 @@ public class DiffRowGenerator {
      * @return the DiffRows between original and revised texts
      */
     public List<DiffRow> generateDiffRows(List<String> original, List<String> revised) {
+        if (ignoreWhiteSpaces) {
+            Function<String, String> whiteSpaceReplacer = new Function<String, String>(){
+                @Override
+                public String apply(String string) {
+                    if (string == null) {
+                        return null;
+                    } else {
+                        return string.trim().replaceAll("\\s+", " ");
+                    }
+                }
+            };
+            original = Lists.transform(original, whiteSpaceReplacer);
+            revised = Lists.transform(revised, whiteSpaceReplacer);
+        }
         return generateDiffRows(original, revised, DiffUtils.diff(original, revised, equalizer));
     }
 
