@@ -26,6 +26,12 @@
 			<url>http://skypencil.jp/</url>
 		</developer>
 	</developers>
+	<contributors>
+		<contributor>
+			<name>andreaskumlehn</name>
+			<url>https://github.com/andreaskumlehn</url>
+		</contributor>
+	</contributors>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
