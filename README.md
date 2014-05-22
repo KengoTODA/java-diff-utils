@@ -2,6 +2,10 @@ A fork of [java-diff-utils](https://code.google.com/p/java-diff-utils/)
 
 # Changelog
 
+## 1.5.0
+
+- make Equalizer configurable. ([pull #1](https://github.com/eller86/java-diff-utils/pull/1))
+
 ## 1.4.1
 
 - bugfix: parse method should be public
