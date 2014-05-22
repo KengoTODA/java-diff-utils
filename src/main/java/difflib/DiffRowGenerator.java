@@ -23,7 +23,9 @@ import java.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 /**
  * This class for generating DiffRows for side-by-sidy view.
@@ -74,6 +76,11 @@ public class DiffRowGenerator {
         private int columnWidth = 80;
         @Nullable
         private String defaultString = "";
+        private Equalizer<String> stringEqualizer = new Equalizer<String>() {
+            public boolean equals(String original, String revised) {
+                return Objects.equals(original, revised);
+            }
+        };
 
         /**
          * Show inline diffs in generating diff rows or not.
@@ -154,7 +161,18 @@ public class DiffRowGenerator {
         }
 
         /**
-         * Build the DiffRowGenerator. If some parameters is not set, the default values are used.
+         * Set the custom equalizer to use while comparing the lines of the revisions.
+         * @param stringEqualizer to use (custom one)
+         * @return builder with configured stringEqualizer
+         */
+        public Builder stringEqualizer(Equalizer<String> stringEqualizer) {
+            this.stringEqualizer = stringEqualizer;
+            return this;
+        }
+
+        /**
+         * Build the DiffRowGenerator using the default Equalizer for rows.
+         * If some parameters are not set, the default values are used.
          * @return the customized DiffRowGenerator
          */
         public DiffRowGenerator build() {
@@ -171,19 +189,7 @@ public class DiffRowGenerator {
         InlineNewCssClass = builder.InlineNewCssClass;
         columnWidth = builder.columnWidth; //
         defaultString = builder.defaultString;
-        equalizer = new Equalizer<String>() {
-            public boolean equals(@Nullable String original, @Nullable String revised) {
-                if (ignoreWhiteSpaces) {
-                    if (original != null) {
-                        original = original.trim().replaceAll("\\s+", " ");
-                    }
-                    if (revised != null) {
-                        revised = revised.trim().replaceAll("\\s+", " ");
-                    }
-                }
-                return Objects.equals(original, revised);
-            }
-        };
+        equalizer = builder.stringEqualizer;
     }
 
     /**
@@ -195,6 +201,20 @@ public class DiffRowGenerator {
      * @return the DiffRows between original and revised texts
      */
     public List<DiffRow> generateDiffRows(List<String> original, List<String> revised) {
+        if (ignoreWhiteSpaces) {
+            Function<String, String> whiteSpaceReplacer = new Function<String, String>(){
+                @Override
+                public String apply(String string) {
+                    if (string == null) {
+                        return null;
+                    } else {
+                        return string.trim().replaceAll("\\s+", " ");
+                    }
+                }
+            };
+            original = Lists.transform(original, whiteSpaceReplacer);
+            revised = Lists.transform(revised, whiteSpaceReplacer);
+        }
         return generateDiffRows(original, revised, DiffUtils.diff(original, revised, equalizer));
     }
 
