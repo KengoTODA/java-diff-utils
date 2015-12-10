@@ -320,7 +320,7 @@ public class DiffRowGenerator {
             revList.add(character.toString());
         }
         List<Delta<String>> inlineDeltas = DiffUtils.diff(origList, revList).getDeltas();
-        if (inlineDeltas.size() < 3) {
+        if (inlineDeltas.size() > 0) {
             Collections.reverse(inlineDeltas);
             for (Delta<String> inlineDelta : inlineDeltas) {
                 Chunk<String> inlineOrig = inlineDelta.getOriginal();
