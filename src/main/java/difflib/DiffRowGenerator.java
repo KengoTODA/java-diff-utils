@@ -285,13 +285,27 @@ public class DiffRowGenerator {
                 }
             } else if (orig.size() > rev.size()) {
                 for (int j = 0; j < orig.size(); j++) {
-                    diffRows.add(new DiffRow(Tag.CHANGE, (String) orig.getLines().get(j), rev
-                            .getLines().size() > j ? (String) rev.getLines().get(j) : defaultString));
+
+                    if (j < rev.size()) {
+                        diffRows.add(new DiffRow(Tag.CHANGE, (String) orig.getLines().get(j), (String) rev.getLines()
+                                .get(j)));
+                    }
+                    else {
+                        diffRows.add(new DiffRow(Tag.DELETE, (String) orig.getLines().get(j), defaultString));
+                    }
                 }
-            } else {
+            }
+            else {
                 for (int j = 0; j < rev.size(); j++) {
-                    diffRows.add(new DiffRow(Tag.CHANGE, orig.getLines().size() > j ? (String) orig
-                            .getLines().get(j) : defaultString, (String) rev.getLines().get(j)));
+
+                    if (j < orig.size()) {
+                        diffRows.add(new DiffRow(Tag.CHANGE, (String) orig.getLines().get(j), (String) rev.getLines()
+                                .get(j)));
+                    }
+                    else {
+                        diffRows.add(new DiffRow(Tag.INSERT, defaultString, (String) rev.getLines().get(j)));
+                    }
+
                 }
             }
             endPos = orig.last() + 1;
